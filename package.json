@@ -1,0 +1,47 @@
+{
+  "name": "webpack-stats-diff",
+  "version": "0.0.0-semantically-released",
+  "description": "Webpack plugin to report changes in bundle sizes across builds",
+  "main": "src/index.js",
+  "scripts": {
+    "commit": "git-cz",
+    "lint": "eslint 'src/**'",
+    "test": "jest --passWithNoTests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ZachGawlik/webpack-stats-diff-plugin.git"
+  },
+  "keywords": [
+    "webpack-plugin",
+    "webpack",
+    "plugin",
+    "stats"
+  ],
+  "author": "Zach Gawlik <zachgawlik@gmail.com> (https://zachgawlik.com/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ZachGawlik/webpack-stats-diff-plugin/issues"
+  },
+  "homepage": "https://github.com/ZachGawlik/webpack-stats-diff-plugin#readme",
+  "devDependencies": {
+    "commitizen": "2.9.6",
+    "cz-conventional-changelog": "2.1.0",
+    "eslint": "4.19.1",
+    "husky": "1.0.0-rc.2",
+    "jest": "22.4.3"
+  },
+  "engines": {
+    "node": ">=6.11.5"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn run lint && yarn test"
+    }
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  }
+}
