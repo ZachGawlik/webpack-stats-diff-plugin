@@ -1,6 +1,6 @@
 {
-  "name": "webpack-stats-diff",
-  "version": "0.0.0-semantically-released",
+  "name": "webpack-stats-diff-plugin",
+  "version": "0.1.0",
   "description": "Webpack plugin to report changes in bundle sizes across builds",
   "main": "src/index.js",
   "scripts": {
@@ -43,5 +43,8 @@
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
+  },
+  "dependencies": {
+    "webpack-stats-diff": "1.0.2"
   }
 }
