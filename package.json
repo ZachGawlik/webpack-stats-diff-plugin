@@ -1,12 +1,13 @@
 {
   "name": "webpack-stats-diff-plugin",
-  "version": "0.1.0",
+  "version": "0.0.0-semantically-released",
   "description": "Webpack plugin to report changes in bundle sizes across builds",
   "main": "src/index.js",
   "scripts": {
     "commit": "git-cz",
     "lint": "eslint 'src/**'",
-    "test": "jest --passWithNoTests"
+    "test": "jest --passWithNoTests",
+    "semantic-release": "semantic-release"
   },
   "repository": {
     "type": "git",

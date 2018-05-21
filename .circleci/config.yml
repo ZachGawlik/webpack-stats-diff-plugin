@@ -1,0 +1,30 @@
+version: 2
+jobs:
+  test_node_8:
+    docker:
+      - image: circleci/node:8
+    steps:
+      - checkout
+      - run: yarn
+      - run: yarn run lint
+      - run: yarn test
+
+  release:
+    docker:
+      - image: circleci/node:8
+    steps:
+      - checkout
+      - run: yarn
+      # semantic-release is not listed as devDependency
+      # as its engine requirement causes `yarn install` to fail for node 6
+      - run: npx semantic-release@15
+
+workflows:
+  version: 2
+  test_and_release:
+    # Run the test jobs first, then the release only when all the test jobs are successful
+    jobs:
+      - test_node_8
+      - release:
+          requires:
+            - test_node_8
