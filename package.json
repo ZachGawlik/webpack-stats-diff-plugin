@@ -46,6 +46,6 @@
     }
   },
   "dependencies": {
-    "webpack-stats-diff": "1.0.2"
+    "webpack-stats-diff": "1.2.0"
   }
 }
