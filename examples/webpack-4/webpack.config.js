@@ -43,7 +43,7 @@ module.exports = (env = {}) => {
       maxModules: 0
     },
     plugins: [
-      new CleanWebpackPlugin([PATHS.build], { beforeEmit: true }),
+      new CleanWebpackPlugin([PATHS.build]),
       new MiniCssExtractPlugin({
         filename: '[name].[chunkhash].css',
         chunkFilename: '[name].[chunkhash].css'
