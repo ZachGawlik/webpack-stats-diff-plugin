@@ -27,7 +27,7 @@ class StatsDiffPlugin {
           this.getPreviousBuildSize.bind(this)
         );
       }
-      compiler.hooks.afterEmit.tapAsync(
+      compiler.hooks.done.tapAsync(
         'webpack-stats-diff-plugin',
         this.getStatsDiff.bind(this)
       );
@@ -35,7 +35,7 @@ class StatsDiffPlugin {
       if (!this.oldStatsFile) {
         compiler.plugin('before-run', this.getPreviousBuildSize.bind(this));
       }
-      compiler.plugin('after-emit', this.getStatsDiff.bind(this));
+      compiler.plugin('done', this.getStatsDiff.bind(this));
     }
   }
 
@@ -47,17 +47,24 @@ class StatsDiffPlugin {
     });
   }
 
-  getStatsDiff(compilation, callback) {
+  getStatsDiff(stats) {
     if (this.oldStatsFile) {
       const oldPath = path.resolve(process.cwd(), this.oldStatsFile);
       if (!fs.existsSync(oldPath)) {
-        return callback(new Error('File does not exist'));
+        throw new Error('File does not exist');
       }
       const oldAssets = require(oldPath).assets;
-      const { assets } = compilation.getStats().toJson();
+      const { assets } = stats.compilation;
+      const formattedAssets = Object.keys(assets).map(name => ({
+        name,
+        size: assets[name].size()
+      }));
       console.log(`Comparing build sizes to ${this.oldStatsFile}`);
-      printStatsDiff(getStatsDiff(oldAssets, assets, this.config), null, 2);
-      callback();
+      printStatsDiff(
+        getStatsDiff(oldAssets, formattedAssets, this.config),
+        null,
+        2
+      );
     } else {
       measureFileSizesBeforeBuild(this.buildRoot).then(({ sizes }) => {
         console.log(
@@ -68,7 +75,6 @@ class StatsDiffPlugin {
           null,
           2
         );
-        callback();
       });
     }
   }
