@@ -1,0 +1,38 @@
+{
+  "name": "example-app-webpack-2",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "scripts": {
+    "build": "webpack",
+    "stats_without_commons": "webpack --profile --json > stats-commons-chunks.json",
+    "stats_with_commons": "COMMONS_CHUNKS=true webpack --profile --json > stats-commons-chunks.json"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "babel-core": "6.26.3",
+    "babel-loader": "7.1.5",
+    "babel-plugin-syntax-dynamic-import": "6.18.0",
+    "babel-plugin-syntax-object-rest-spread": "6.13.0",
+    "babel-plugin-transform-class-properties": "6.24.1",
+    "babel-preset-env": "1.7.0",
+    "babel-preset-react": "6.24.1",
+    "clean-webpack-plugin": "^0.1.19",
+    "css-loader": "0.28.11",
+    "extract-text-webpack-plugin": "2.1.2",
+    "file-loader": "1.1.11",
+    "style-loader": "^0.21.0",
+    "webpack": "2.7.0",
+    "webpack-stats-diff-plugin": "0.3.0"
+  },
+  "dependencies": {
+    "axios": "0.18.0",
+    "lodash": "^4.17.10",
+    "prop-types": "15.6.2",
+    "react": "^16.4.1",
+    "react-dom": "^16.4.1",
+    "react-redux": "5.0.7",
+    "redux": "4.0.0"
+  }
+}
