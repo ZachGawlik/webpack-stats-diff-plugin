@@ -33,9 +33,9 @@ class StatsDiffPlugin {
       );
     } else {
       if (!this.oldStatsFile) {
-        compiler.plugin('beforeRun', this.getPreviousBuildSize.bind(this));
+        compiler.plugin('before-run', this.getPreviousBuildSize.bind(this));
       }
-      compiler.plugin('afterEmit', this.getStatsDiff.bind(this));
+      compiler.plugin('after-emit', this.getStatsDiff.bind(this));
     }
   }
 
