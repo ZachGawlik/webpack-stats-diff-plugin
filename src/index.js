@@ -7,7 +7,7 @@ const {
   printStatsDiff
 } = require('webpack-stats-diff');
 const {
-  measureFileSizesBeforeBuild
+  measureFileSizesBeforeBuild: getBuildFolderSizes
 } = require('react-dev-utils/FileSizeReporter');
 const chalk = require('chalk');
 
@@ -74,7 +74,7 @@ class StatsDiffPlugin {
   getPreviousBuildSize(compiler, callback) {
     this.buildRoot = compiler.options.output.path;
     console.log(`Comparing build sizes to prior contents of ${this.buildRoot}`);
-    measureFileSizesBeforeBuild(this.buildRoot).then(({ sizes }) => {
+    getBuildFolderSizes(this.buildRoot).then(({ sizes }) => {
       this.sizesBeforeBuild = sizes;
       if (Object.keys(sizes).length === 0) {
         console.log(
@@ -105,7 +105,7 @@ class StatsDiffPlugin {
 
   compareWithBuildOutput() {
     if (Object.keys(this.sizesBeforeBuild).length > 0) {
-      measureFileSizesBeforeBuild(this.buildRoot).then(({ sizes }) => {
+      getBuildFolderSizes(this.buildRoot).then(({ sizes }) => {
         printStatsDiff(
           getAssetsDiff(this.sizesBeforeBuild, sizes, this.config),
           null,
