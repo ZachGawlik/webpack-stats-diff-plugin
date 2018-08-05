@@ -21,23 +21,54 @@ class StatsDiffPlugin {
   }
 
   apply(compiler) {
+    //  compiler.hooks only exists for Webpack 4.x
     if (compiler.hooks) {
-      if (!this.oldStatsFile) {
+      if (this.oldStatsFile) {
         compiler.hooks.beforeRun.tapAsync(
-          'calculate-previous-size',
+          'get-sizes-from-stats-file',
+          this.getSizeFromStatsFile.bind(this)
+        );
+        compiler.hooks.done.tapAsync(
+          'webpack-stats-diff-plugin',
+          this.compareWithBuildStats.bind(this)
+        );
+      } else {
+        compiler.hooks.beforeRun.tapAsync(
+          'get-sizes-from-build-folder',
           this.getPreviousBuildSize.bind(this)
         );
+        compiler.hooks.done.tapAsync(
+          'webpack-stats-diff-plugin',
+          this.compareWithBuildOutput.bind(this)
+        );
       }
-      compiler.hooks.done.tapAsync(
-        'webpack-stats-diff-plugin',
-        this.getStatsDiff.bind(this)
-      );
     } else {
-      if (!this.oldStatsFile) {
+      if (this.oldStatsFile) {
+        compiler.plugin('before-run', this.getSizeFromStatsFile.bind(this));
+        compiler.plugin('done', this.compareWithBuildStats.bind(this));
+      } else {
         compiler.plugin('before-run', this.getPreviousBuildSize.bind(this));
+        compiler.plugin('done', this.compareWithBuildOutput.bind(this));
       }
-      compiler.plugin('done', this.getStatsDiff.bind(this));
     }
+  }
+
+  getSizeFromStatsFile(compiler, callback) {
+    const oldPath = path.resolve(process.cwd(), this.oldStatsFile);
+    if (!fs.existsSync(oldPath)) {
+      throw new Error('File does not exist');
+    }
+    console.log(`Comparing build sizes to ${this.oldStatsFile}`);
+    const { assets } = require(oldPath);
+    if (!assets) {
+      console.log(
+        chalk.yellow(
+          'No assets found in stats file. If using WebpackStatsPlugin, ensure that opts.files contains "assets"'
+        )
+      );
+    }
+    this.sizesFromStatsFile = assets;
+    callback();
   }
 
   getPreviousBuildSize(compiler, callback) {
@@ -57,34 +88,30 @@ class StatsDiffPlugin {
     });
   }
 
-  getStatsDiff(stats) {
-    if (this.oldStatsFile) {
-      const oldPath = path.resolve(process.cwd(), this.oldStatsFile);
-      if (!fs.existsSync(oldPath)) {
-        throw new Error('File does not exist');
-      }
-      const oldAssets = require(oldPath).assets;
+  compareWithBuildStats(stats) {
+    if (this.sizesFromStatsFile) {
       const { assets } = stats.compilation;
       const formattedAssets = Object.keys(assets).map(name => ({
         name,
         size: assets[name].size()
       }));
-      console.log(`Comparing build sizes to ${this.oldStatsFile}`);
       printStatsDiff(
-        getStatsDiff(oldAssets, formattedAssets, this.config),
+        getStatsDiff(this.sizesFromStatsFile, formattedAssets, this.config),
         null,
         2
       );
-    } else {
-      if (Object.keys(this.sizesBeforeBuild).length > 0) {
-        measureFileSizesBeforeBuild(this.buildRoot).then(({ sizes }) => {
-          printStatsDiff(
-            getAssetsDiff(this.sizesBeforeBuild, sizes, this.config),
-            null,
-            2
-          );
-        });
-      }
+    }
+  }
+
+  compareWithBuildOutput() {
+    if (Object.keys(this.sizesBeforeBuild).length > 0) {
+      measureFileSizesBeforeBuild(this.buildRoot).then(({ sizes }) => {
+        printStatsDiff(
+          getAssetsDiff(this.sizesBeforeBuild, sizes, this.config),
+          null,
+          2
+        );
+      });
     }
   }
 }
