@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "build": "webpack",
-    "stats_without_commons": "webpack --profile --json > stats-commons-chunks.json",
+    "stats_without_commons": "webpack --profile --json > stats-no-commons-chunks.json",
     "stats_with_commons": "COMMONS_CHUNKS=true webpack --profile --json > stats-commons-chunks.json"
   },
   "author": "",
