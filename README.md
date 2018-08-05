@@ -6,14 +6,14 @@ Clear reporting of bundle sizes relative to the previous build or relative to an
 
 Webpack prints absolute sizes of outputted files, but it's hard to see the overall impact of a code or configuration change. For example if you wanted to know the effect of changing webpack's `optimization.splitChunks.chunks` setting from its default `"async"` value to the recommended `"all"`,
 
-Instead of trying to compare webpack's basic output:
-
-![standard webpack report with chunks: async](readme-assets/standard-report-all.png)
-![standard webpack report with chunks: all](readme-assets/standard-report-async.png)
-
 Adding this plugin will highlight only the key changes:
 
 ![webpack-stats-diff-plugin comparison output](readme-assets/plugin-output.png)
+
+Versus having to compare and contrast two standard webpack outputs:
+
+![standard webpack report with chunks: async](readme-assets/standard-report-all.png)
+![standard webpack report with chunks: all](readme-assets/standard-report-async.png)
 
 ## Installation & Usage
 
