@@ -70,3 +70,9 @@ The WebpackStatsDiffPlugin constructor can take in the following optional fields
 ### Supported environments
 
 This plugin should work for webpack versions >= 2, and Node.js versions >= 6.14.3
+
+## Other Solutions
+
+[GoogleChromeLabs/size-plugin](https://github.com/GoogleChromeLabs/size-plugin). Honestly if this had been created a month earlier, I might not have made this plugin 😅. If you want to compare against the previous build and prefer size-plugin's output format, I would recommend it over this plugin as the devs are looking into how to provide more in-depth size tracking and performance budgeting features.
+
+At this point, I recommend my own plugin only if you need to compare against a stats file, which can be useful for seeing size changes relative to master or an earlier known state.
